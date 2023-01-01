@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,54 @@ namespace Warships
         public MainWindow()
         {
             InitializeComponent();
+            CreateBoard();
+        }
+
+        private void CreateBoard()
+        {
+            var rectangleSize = 80;
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    Rectangle newRectangle = new Rectangle
+                    {
+                        Width = rectangleSize,
+                        Height = rectangleSize,
+                        Fill = Brushes.DarkGray,
+                        StrokeThickness = 1,
+                        Stroke = Brushes.Azure,
+                    };
+                    newRectangle.MouseEnter += OnMouseEnter;
+                    newRectangle.MouseLeave += OnMouseLeave;
+                    Canvas.SetLeft(newRectangle, i * rectangleSize);
+                    Canvas.SetTop(newRectangle, j * rectangleSize);
+                    
+                    Canvas.Children.Add(newRectangle);
+                }
+            }
+        }
+        
+        private void OnMouseEnter(object sender, MouseEventArgs e)
+        {
+            if (e.OriginalSource is Rectangle activeRectangle)
+            {
+                Rectangle newRectangle = activeRectangle;
+                newRectangle.Fill = Brushes.SlateGray;
+                Canvas.Children.Remove(activeRectangle);
+                Canvas.Children.Add(newRectangle);
+            }
+        }
+
+        private void OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            if (e.OriginalSource is Rectangle activeRectangle)
+            {
+                Rectangle newRectangle = activeRectangle;
+                newRectangle.Fill = Brushes.DarkGray;
+                Canvas.Children.Remove(activeRectangle);
+                Canvas.Children.Add(newRectangle);
+            }
         }
     }
 }

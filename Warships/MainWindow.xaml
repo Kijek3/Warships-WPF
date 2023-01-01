@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Warships"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Title="MainWindow" Height="900" Width="1100">
+    <Viewbox Stretch="Fill">
+        <Canvas Name="Canvas" Height="900" Width="1100" Background="LightYellow" Focusable="True" />
+    </Viewbox>
 </Window>
