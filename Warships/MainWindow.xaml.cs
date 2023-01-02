@@ -21,6 +21,8 @@ namespace Warships
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Board _board;
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -29,24 +31,38 @@ namespace Warships
 
         private void CreateBoard()
         {
+            var height = 8;
+            var width = 10;
+            _board = new Board(height, width);
+            RedrawBoard();
+        }
+
+        private void RedrawBoard()
+        {
             var rectangleSize = 80;
             var globalId = 0;
-            for (int i = 0; i < 10; i++)
+            var strokeColor = Brushes.Azure;
+            
+            Canvas.Children.Clear();
+            
+            for (int i = 0; i < _board.Height; i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < _board.Width; j++)
                 {
                     Rectangle newRectangle = new Rectangle
                     {
                         Width = rectangleSize,
                         Height = rectangleSize,
-                        Fill = Brushes.DarkGray,
+                        Fill = _board.DrawnRectAt(i, j).RectColor(),
                         StrokeThickness = 1,
-                        Stroke = Brushes.Azure,
+                        Stroke = strokeColor
                     };
-                    newRectangle.MouseEnter += OnMouseEnter;
-                    newRectangle.MouseLeave += OnMouseLeave;
+                    
                     var id = globalId;
+                    newRectangle.MouseEnter += (sender, e) => OnMouseEnter(sender, e, id);
+                    newRectangle.MouseLeave += (sender, e) => OnMouseLeave(sender, e, id);
                     newRectangle.MouseLeftButtonDown += (sender, e) => OnMouseLeftButtonDown(sender, e, id);
+                    
                     Canvas.SetTop(newRectangle, i * rectangleSize);
                     Canvas.SetLeft(newRectangle, j * rectangleSize);
                     
@@ -56,31 +72,56 @@ namespace Warships
             }
         }
         
-        private void OnMouseEnter(object sender, MouseEventArgs e)
+        private void OnMouseEnter(object sender, MouseEventArgs e, int id)
         {
-            if (e.OriginalSource is Rectangle activeRectangle)
+            if (e.OriginalSource is not Rectangle) return;
+            
+            var height = id / _board.Width;
+            var width = id % _board.Width;
+
+            if (_board.RectAt(height, width) == EBoardRect.Empty)
             {
-                Rectangle newRectangle = activeRectangle;
-                newRectangle.Fill = Brushes.SlateGray;
-                Canvas.Children.Remove(activeRectangle);
-                Canvas.Children.Add(newRectangle);
+                _board.SetDrawnRectAt(height, width, EBoardRect.PlacementReady);
+                RedrawBoard();
+            } 
+            else if (_board.RectAt(height, width) == EBoardRect.Ship)
+            {
+                _board.SetDrawnRectAt(height, width, EBoardRect.PlacementError);
+                RedrawBoard();
             }
         }
-
-        private void OnMouseLeave(object sender, MouseEventArgs e)
+        
+        private void OnMouseLeave(object sender, MouseEventArgs e, int id)
         {
-            if (e.OriginalSource is Rectangle activeRectangle)
+            if (e.OriginalSource is not Rectangle) return;
+            
+            var height = id / _board.Width;
+            var width = id % _board.Width;
+
+            if (_board.RectAt(height, width) == EBoardRect.Empty)
             {
-                Rectangle newRectangle = activeRectangle;
-                newRectangle.Fill = Brushes.DarkGray;
-                Canvas.Children.Remove(activeRectangle);
-                Canvas.Children.Add(newRectangle);
+                _board.SetDrawnRectAt(height, width, EBoardRect.Empty);
+                RedrawBoard();
+            } 
+            else if (_board.RectAt(height, width) == EBoardRect.Ship)
+            {
+                _board.SetDrawnRectAt(height, width, EBoardRect.Ship); 
+                RedrawBoard();
             }
         }
 
         private void OnMouseLeftButtonDown(object sender, MouseEventArgs e, int id)
         {
-            Debug.WriteLine(id);
+            if (e.OriginalSource is not Rectangle) return;
+            
+            var height = id / _board.Width;
+            var width = id % _board.Width;
+
+            if (_board.CanPlaceAt(height, width))
+            {
+                _board.SetRectAt(height, width, EBoardRect.Ship);
+                RedrawBoard();
+            }
         }
     }
 }
