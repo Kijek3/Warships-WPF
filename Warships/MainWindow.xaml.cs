@@ -30,6 +30,7 @@ namespace Warships
         private void CreateBoard()
         {
             var rectangleSize = 80;
+            var globalId = 0;
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 10; j++)
@@ -44,10 +45,13 @@ namespace Warships
                     };
                     newRectangle.MouseEnter += OnMouseEnter;
                     newRectangle.MouseLeave += OnMouseLeave;
-                    Canvas.SetLeft(newRectangle, i * rectangleSize);
-                    Canvas.SetTop(newRectangle, j * rectangleSize);
+                    var id = globalId;
+                    newRectangle.MouseLeftButtonDown += (sender, e) => OnMouseLeftButtonDown(sender, e, id);
+                    Canvas.SetTop(newRectangle, i * rectangleSize);
+                    Canvas.SetLeft(newRectangle, j * rectangleSize);
                     
                     Canvas.Children.Add(newRectangle);
+                    globalId += 1;
                 }
             }
         }
@@ -72,6 +76,11 @@ namespace Warships
                 Canvas.Children.Remove(activeRectangle);
                 Canvas.Children.Add(newRectangle);
             }
+        }
+
+        private void OnMouseLeftButtonDown(object sender, MouseEventArgs e, int id)
+        {
+            Debug.WriteLine(id);
         }
     }
 }

@@ -7,5 +7,5 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1100">
         
-        <Canvas Name="Canvas" Background="LightYellow" Focusable="True" />
+        <Canvas Name="Canvas" Background="LightYellow" />
 </Window>
