@@ -40,36 +40,44 @@ namespace Warships
         private void RedrawBoard()
         {
             var rectangleSize = 80;
-            var globalId = 0;
             var strokeColor = Brushes.Azure;
             
-            Canvas.Children.Clear();
-            
-            for (int i = 0; i < _board.Height; i++)
+            for (int i = 0; i < _board.RedrawBuffer.Count; i++)
             {
-                for (int j = 0; j < _board.Width; j++)
+                var y = _board.RedrawBuffer[i].Item1;
+                var x = _board.RedrawBuffer[i].Item2;
+                
+                var id = y * _board.Width + x;
+                
+                Rectangle newRectangle = new Rectangle
                 {
-                    Rectangle newRectangle = new Rectangle
+                    Width = rectangleSize,
+                    Height = rectangleSize,
+                    Fill = _board.DrawnRectAt(y, x).RectColor(),
+                    StrokeThickness = 1,
+                    Stroke = strokeColor,
+                    Uid = id.ToString()
+                };
+                
+                newRectangle.MouseEnter += (sender, e) => OnMouseEnter(sender, e, id);
+                newRectangle.MouseLeave += (sender, e) => OnMouseLeave(sender, e, id);
+                newRectangle.MouseLeftButtonDown += (sender, e) => OnMouseLeftButtonDown(sender, e, id);
+                
+                Canvas.SetTop(newRectangle, y * rectangleSize);
+                Canvas.SetLeft(newRectangle, x * rectangleSize);
+
+                foreach (UIElement rect in Canvas.Children)
+                {
+                    if (rect.Uid == id.ToString())
                     {
-                        Width = rectangleSize,
-                        Height = rectangleSize,
-                        Fill = _board.DrawnRectAt(i, j).RectColor(),
-                        StrokeThickness = 1,
-                        Stroke = strokeColor
-                    };
-                    
-                    var id = globalId;
-                    newRectangle.MouseEnter += (sender, e) => OnMouseEnter(sender, e, id);
-                    newRectangle.MouseLeave += (sender, e) => OnMouseLeave(sender, e, id);
-                    newRectangle.MouseLeftButtonDown += (sender, e) => OnMouseLeftButtonDown(sender, e, id);
-                    
-                    Canvas.SetTop(newRectangle, i * rectangleSize);
-                    Canvas.SetLeft(newRectangle, j * rectangleSize);
-                    
-                    Canvas.Children.Add(newRectangle);
-                    globalId += 1;
+                        Canvas.Children.Remove(rect);
+                        break;
+                    }
                 }
+                
+                Canvas.Children.Add(newRectangle);
             }
+            _board.RedrawBuffer.Clear();
         }
         
         private void OnMouseEnter(object sender, MouseEventArgs e, int id)
