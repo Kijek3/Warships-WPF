@@ -17,28 +17,15 @@ public static class EBoardRectExtensions
 {
     public static SolidColorBrush RectColor(this EBoardRect rect)
     {
-        switch(rect)
+        return rect switch
         {
-            case EBoardRect.Hidden:
-                return Brushes.Gray;
-                break;
-            case EBoardRect.PlacementReady:
-                return Brushes.Lime;
-                break;
-            case EBoardRect.PlacementError:
-                return Brushes.Firebrick;
-                break;
-            case EBoardRect.Empty:
-                return Brushes.Blue;
-                break;
-            case EBoardRect.Ship:
-                return Brushes.DarkSlateGray;
-                break;
-            case EBoardRect.Hit:
-                return Brushes.Yellow;
-                break;
-            default:
-                return Brushes.Gray;
-        }
+            EBoardRect.Hidden => Brushes.DarkGray,
+            EBoardRect.PlacementReady => Brushes.Green,
+            EBoardRect.PlacementError => Brushes.Firebrick,
+            EBoardRect.Empty => Brushes.DarkSlateGray,
+            EBoardRect.Ship => Brushes.Black,
+            EBoardRect.Hit => Brushes.Yellow,
+            _ => Brushes.Gray
+        };
     }
 }

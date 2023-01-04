@@ -76,17 +76,17 @@ namespace Warships
         {
             if (e.OriginalSource is not Rectangle) return;
             
-            var height = id / _board.Width;
-            var width = id % _board.Width;
-
-            if (_board.RectAt(height, width) == EBoardRect.Empty)
+            var y = id / _board.Width;
+            var x = id % _board.Width;
+            
+            if (_board.RectAt(y, x) == EBoardRect.Empty)
             {
-                _board.SetDrawnRectAt(height, width, EBoardRect.PlacementReady);
+                _board.SetDrawnRectAt(y, x, EBoardRect.PlacementReady);
                 RedrawBoard();
             } 
-            else if (_board.RectAt(height, width) == EBoardRect.Ship)
+            else if (_board.RectAt(y, x) == EBoardRect.Ship)
             {
-                _board.SetDrawnRectAt(height, width, EBoardRect.PlacementError);
+                _board.SetDrawnRectAt(y, x, EBoardRect.PlacementError);
                 RedrawBoard();
             }
         }
@@ -95,17 +95,17 @@ namespace Warships
         {
             if (e.OriginalSource is not Rectangle) return;
             
-            var height = id / _board.Width;
-            var width = id % _board.Width;
+            var y = id / _board.Width;
+            var x = id % _board.Width;
 
-            if (_board.RectAt(height, width) == EBoardRect.Empty)
+            if (_board.RectAt(y, x) == EBoardRect.Empty)
             {
-                _board.SetDrawnRectAt(height, width, EBoardRect.Empty);
+                _board.SetDrawnRectAt(y, x, EBoardRect.Empty);
                 RedrawBoard();
             } 
-            else if (_board.RectAt(height, width) == EBoardRect.Ship)
+            else if (_board.RectAt(y, x) == EBoardRect.Ship)
             {
-                _board.SetDrawnRectAt(height, width, EBoardRect.Ship); 
+                _board.SetDrawnRectAt(y, x, EBoardRect.Ship); 
                 RedrawBoard();
             }
         }
@@ -114,12 +114,12 @@ namespace Warships
         {
             if (e.OriginalSource is not Rectangle) return;
             
-            var height = id / _board.Width;
-            var width = id % _board.Width;
+            var y = id / _board.Width;
+            var x = id % _board.Width;
 
-            if (_board.CanPlaceAt(height, width))
+            if (_board.CanPlaceAt(y, x))
             {
-                _board.SetRectAt(height, width, EBoardRect.Ship);
+                _board.SetRectAt(y, x, EBoardRect.Ship);
                 RedrawBoard();
             }
         }

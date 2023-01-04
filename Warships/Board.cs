@@ -31,28 +31,28 @@ public class Board
         }
     }
 
-    public EBoardRect RectAt(int height, int width)
+    public EBoardRect RectAt(int y, int x)
     {
-        return _shipsBoard[height, width];
+        return _shipsBoard[y, x];
     }
 
-    public void SetRectAt(int height, int width, EBoardRect type)
+    public void SetRectAt(int y, int x, EBoardRect type)
     {
-        _shipsBoard[height, width] = type;
+        _shipsBoard[y, x] = type;
     }
     
-    public EBoardRect DrawnRectAt(int height, int width)
+    public EBoardRect DrawnRectAt(int y, int x)
     {
-        return _drawnBoard[height, width];
+        return _drawnBoard[y, x];
     }
 
-    public void SetDrawnRectAt(int height, int width, EBoardRect type)
+    public void SetDrawnRectAt(int y, int x, EBoardRect type)
     {
-        _drawnBoard[height, width] = type;
+        _drawnBoard[y, x] = type;
     }
 
-    public bool CanPlaceAt(int height, int width)
+    public bool CanPlaceAt(int y, int x)
     {
-        return _shipsBoard[height, width] != EBoardRect.Ship;
+        return _shipsBoard[y, x] != EBoardRect.Ship;
     }
 }
