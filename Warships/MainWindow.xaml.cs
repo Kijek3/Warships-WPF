@@ -29,7 +29,6 @@ namespace Warships
         {
             InitializeComponent();
             CreateBoard();
-            AwaitKeyPress();
         }
 
         private void CreateBoard()
@@ -38,22 +37,6 @@ namespace Warships
             var width = 10;
             _boardPlayer1 = new Board(height, width);
             RedrawBoard(_boardPlayer1);
-        }
-
-        private void AwaitKeyPress()
-        {
-            if (GameManager.GetInstance().GameState == EGameState.FirstPlayerPlacingShips)
-            {
-                //TODO: Place here detect of R key to change ship orientation
-                //and then do:
-                // if (_boardPlayer1.ShipToPlace() != null)
-                // {
-                //     var currentOri = _boardPlayer1.ShipToPlace().Orientation;
-                //     _boardPlayer1.ShipToPlace().Orientation = currentOri == EShipOrientation.Horizontal
-                //         ? EShipOrientation.Vertical
-                //         : EShipOrientation.Horizontal;
-                // }
-            }
         }
             
         private void RedrawBoard(Board board)
