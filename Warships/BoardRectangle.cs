@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -40,15 +41,28 @@ public class BoardRectangle
             
         var y = Id / _board.BoardProperties.Width;
         var x = Id % _board.BoardProperties.Width;
-            
-        if (_board.RectAt(y, x) == EBoardRect.Empty)
+
+        if (GameManager.GetInstance().GameState is EGameState.FirstPlayerPlacingShips or EGameState.SecondPlayerPlacingShips)
         {
-            _board.SetDrawnRectAt(y, x, EBoardRect.PlacementReady);
-            RedrawBoard(_board);
-        } 
-        else if (_board.RectAt(y, x) == EBoardRect.Ship)
-        {
-            _board.SetDrawnRectAt(y, x, EBoardRect.PlacementError);
+            if (_board.IsNextShipPlacable(y, x) == true)
+            {
+                foreach (var (ty, tx) in _board.ShipToPlace()!.ShipTiles(Tuple.Create(y,x), _board))
+                {
+                    _board.SetDrawnRectAt(ty ,tx, EBoardRect.PlacementReady);
+                }
+            }
+            else if (_board.IsNextShipPlacable(y, x) == false)
+            {
+                foreach (var (ty, tx) in _board.ShipToPlace()!.ShipTiles(Tuple.Create(y,x), _board))
+                {
+                    _board.SetDrawnRectAt(ty ,tx, EBoardRect.PlacementError);
+                }
+            }
+            else
+            {
+                return;
+            }
+
             RedrawBoard(_board);
         }
     }
@@ -60,14 +74,20 @@ public class BoardRectangle
         var y = Id / _board.BoardProperties.Width;
         var x = Id % _board.BoardProperties.Width;
 
-        if (_board.RectAt(y, x) == EBoardRect.Empty)
+        if (GameManager.GetInstance().GameState is EGameState.FirstPlayerPlacingShips or EGameState.SecondPlayerPlacingShips)
         {
-            _board.SetDrawnRectAt(y, x, EBoardRect.Empty);
-            RedrawBoard(_board);
-        } 
-        else if (_board.RectAt(y, x) == EBoardRect.Ship)
-        {
-            _board.SetDrawnRectAt(y, x, EBoardRect.Ship); 
+            if (_board.ShipToPlace() != null)
+            {
+                foreach (var (ty, tx) in _board.ShipToPlace()!.ShipTiles(Tuple.Create(y,x), _board))
+                {
+                    _board.SetDrawnRectAt(ty ,tx, _board.RectAt(ty, tx));
+                }
+            }
+            else
+            {
+                return;
+            }
+
             RedrawBoard(_board);
         }
     }
@@ -79,9 +99,22 @@ public class BoardRectangle
         var y = Id / _board.BoardProperties.Width;
         var x = Id % _board.BoardProperties.Width;
 
-        if (_board.CanPlaceAt(y, x))
+        if (GameManager.GetInstance().GameState is EGameState.FirstPlayerPlacingShips or EGameState.SecondPlayerPlacingShips)
         {
-            _board.SetRectAt(y, x, EBoardRect.Ship);
+            if (_board.IsNextShipPlacable(y, x) == true)
+            {
+                foreach (var (ty, tx) in _board.ShipToPlace()!.ShipTiles(Tuple.Create(y,x), _board))
+                {
+                    _board.SetRectAt(ty ,tx, EBoardRect.Ship);
+                    _board.SetDrawnRectAt(ty, tx, EBoardRect.Ship);
+                }
+                _board.PlaceNextShip(y ,x);
+            }
+            else
+            {
+                return;
+            }
+
             RedrawBoard(_board);
         }
     }
