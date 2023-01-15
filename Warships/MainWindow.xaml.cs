@@ -38,7 +38,7 @@ namespace Warships
             _boardPlayer1 = new Board(height, width);
             RedrawBoard(_boardPlayer1);
         }
-
+            
         private void RedrawBoard(Board board)
         {
             for (int i = 0; i < board.RedrawBuffer.Count; i++)
