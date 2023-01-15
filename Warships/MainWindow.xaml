@@ -7,5 +7,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1100">
         
-        <Canvas Name="Canvas" Background="LightYellow" />
+        <Grid>
+                <Canvas Name="Player1" Background="LightYellow" Visibility="Visible" />
+                <Canvas Name="Player2" Background="LightYellow" Visibility="Hidden" />
+                <Canvas Name="Overlay" Background="Black" Visibility="Hidden" MouseLeftButtonDown="Overlay_OnMouseLeftButtonDown">
+                        <TextBlock Name="OverlayText" FontSize="50" FontFamily="Comic Sans MS" Foreground="White"></TextBlock>
+                </Canvas>
+        </Grid>
 </Window>
