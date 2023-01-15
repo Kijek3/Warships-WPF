@@ -122,7 +122,6 @@ public class BoardRectangle
             {
                 foreach (var (ty, tx) in _board.ShipToPlace()!.ShipTiles(Tuple.Create(Y, X), _board))
                 {
-                    _board.SetRectAt(ty ,tx, _board.RectAt(ty, tx));
                     _board.SetDrawnRectAt(ty, tx, _board.RectAt(ty, tx));
                 }
                 
