@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
 
 namespace Warships;
 
@@ -9,6 +8,7 @@ public class Board
 {
     public BoardProperties BoardProperties;
     public List<Tuple<int, int>> RedrawBuffer { get; set; }
+    
     private EBoardRect[,] _shipsBoard;
     private EBoardRect[,] _drawnBoard;
     private Ship[] _ships;
@@ -87,6 +87,17 @@ public class Board
     {
         _ships[_shipToPlaceIndex].StartPosition = Tuple.Create(y, x);
         _shipToPlaceIndex += 1;
+
+        if (_shipToPlaceIndex == _ships.Length)
+        {
+            if (GameManager.GetInstance().GameState == EGameState.FirstPlayerPlacingShips)
+            {
+                GameManager.GetInstance().GameState = EGameState.SecondPlayerPlacingNext;
+            } else if (GameManager.GetInstance().GameState == EGameState.SecondPlayerPlacingShips)
+            {
+                GameManager.GetInstance().GameState = EGameState.FirstPlayerTurnNext;
+            }
+        }
     }
     
     public Ship? ShipToPlace()

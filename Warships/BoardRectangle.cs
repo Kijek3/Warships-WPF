@@ -116,7 +116,7 @@ public class BoardRectangle
     
     private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (GameManager.GetInstance().GameState == EGameState.FirstPlayerPlacingShips)
+        if (GameManager.GetInstance().GameState is EGameState.FirstPlayerPlacingShips or EGameState.SecondPlayerPlacingShips)
         {
             if (_board.ShipToPlace() != null)
             {

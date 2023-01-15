@@ -1,15 +1,26 @@
 ﻿namespace Warships;
 
+public delegate void Notify();
+
 public sealed class GameManager
 {
     private GameManager()
     {
-        GameState = EGameState.FirstPlayerPlacingShips;
+        GameState = EGameState.FirstPlayerBoardGeneration;
     }
 
     private static GameManager? _gameManager;
+    private EGameState _gameState;
 
-    public EGameState GameState { get; set; }
+    public EGameState GameState
+    {
+        get => _gameState;
+        set
+        {
+            _gameState = value;
+            GameStateChanged?.Invoke();
+        }
+    }
 
     public static GameManager GetInstance()
     {
@@ -20,4 +31,6 @@ public sealed class GameManager
 
         return _gameManager;
     }
+
+    public event Notify? GameStateChanged;
 }
