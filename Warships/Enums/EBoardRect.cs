@@ -6,6 +6,7 @@ namespace Warships;
 public enum EBoardRect
 {
     Hidden,
+    HiddenFocused,
     PlacementReady,
     PlacementError,
     Empty,
@@ -19,13 +20,14 @@ public static class EBoardRectExtensions
     {
         return rect switch
         {
-            EBoardRect.Hidden => Brushes.DarkGray,
+            EBoardRect.Hidden => Brushes.Gray,
+            EBoardRect.HiddenFocused => Brushes.LightGray,
             EBoardRect.PlacementReady => Brushes.Green,
             EBoardRect.PlacementError => Brushes.Firebrick,
             EBoardRect.Empty => Brushes.DarkSlateGray,
             EBoardRect.Ship => Brushes.Black,
-            EBoardRect.Hit => Brushes.Yellow,
-            _ => Brushes.Gray
+            EBoardRect.Hit => Brushes.Black,
+            _ => Brushes.White
         };
     }
 }

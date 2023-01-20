@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Timer = System.Timers.Timer;
 
 namespace Warships;
 
@@ -66,6 +70,14 @@ public class BoardRectangle
 
             RedrawBoard(_board);
         }
+        else if (GameManager.GetInstance().GameState is EGameState.FirstPlayerTurn or EGameState.SecondPlayerTurn)
+        {
+            if (_board.DrawnRectAt(Y, X) is EBoardRect.Hidden)
+            {
+                _board.SetDrawnRectAt(Y ,X, EBoardRect.HiddenFocused);
+                RedrawBoard(_board);
+            }
+        }
     }
     
     private void OnMouseLeave(object sender, MouseEventArgs e)
@@ -88,6 +100,14 @@ public class BoardRectangle
 
             RedrawBoard(_board);
         }
+        else if (GameManager.GetInstance().GameState is EGameState.FirstPlayerTurn or EGameState.SecondPlayerTurn)
+        {
+            if (_board.DrawnRectAt(Y, X) is EBoardRect.HiddenFocused)
+            {
+                _board.SetDrawnRectAt(Y ,X, EBoardRect.Hidden);
+                RedrawBoard(_board);
+            }
+        }
     }
 
     private void OnMouseLeftButtonDown(object sender, MouseEventArgs e)
@@ -103,7 +123,6 @@ public class BoardRectangle
                     _board.SetRectAt(ty ,tx, EBoardRect.Ship);
                     _board.SetDrawnRectAt(ty, tx, EBoardRect.Ship);
                 }
-                _board.PlaceNextShip(Y, X);
             }
             else
             {
@@ -111,6 +130,38 @@ public class BoardRectangle
             }
 
             RedrawBoard(_board);
+            _board.PlaceNextShip(Y, X);
+        }
+        else if (GameManager.GetInstance().GameState is EGameState.FirstPlayerTurn or EGameState.SecondPlayerTurn)
+        {
+            if (_board.DrawnRectAt(Y, X) != EBoardRect.HiddenFocused) return;
+            if (_board.RectAt(Y, X) is EBoardRect.Ship)
+            {
+                _board.SetDrawnRectAt(Y, X, EBoardRect.Hit);
+                _board.HandleShipHit(Y, X);
+            } 
+            else if (_board.RectAt(Y, X) is EBoardRect.Empty)
+            {
+                _board.SetDrawnRectAt(Y ,X, EBoardRect.Empty);
+            }
+            else
+            {
+                return;
+            }
+
+            RedrawBoard(_board);
+
+            var nextState = _board.AllShipsSunk() 
+                ? GameManager.GetInstance().GameState is EGameState.FirstPlayerTurn
+                    ? EGameState.FirstPlayerWon
+                    : EGameState.SecondPlayerWon
+                : GameManager.GetInstance().GameState is EGameState.FirstPlayerTurn
+                    ? EGameState.SecondPlayerTurnNext
+                    : EGameState.FirstPlayerTurnNext;
+            
+            GameManager.GetInstance().GameState = EGameState.PlayerWaiting;
+            
+            GameManager.GetInstance().ChangeStateAfterDelay(nextState);
         }
     }
     

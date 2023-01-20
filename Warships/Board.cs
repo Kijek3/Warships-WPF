@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Warships;
 
@@ -90,13 +91,13 @@ public class Board
 
         if (_shipToPlaceIndex == _ships.Length)
         {
-            if (GameManager.GetInstance().GameState == EGameState.FirstPlayerPlacingShips)
-            {
-                GameManager.GetInstance().GameState = EGameState.SecondPlayerPlacingNext;
-            } else if (GameManager.GetInstance().GameState == EGameState.SecondPlayerPlacingShips)
-            {
-                GameManager.GetInstance().GameState = EGameState.FirstPlayerTurnNext;
-            }
+            var nextState = GameManager.GetInstance().GameState == EGameState.FirstPlayerPlacingShips
+                ? EGameState.SecondPlayerPlacingNext
+                : EGameState.FirstPlayerTurnNext;
+            
+            GameManager.GetInstance().GameState = EGameState.PlayerWaiting;
+            
+            GameManager.GetInstance().ChangeStateAfterDelay(nextState);
         }
     }
     
@@ -133,11 +134,59 @@ public class Board
     {
         if (ShipToPlace() == null) return null;
         
-        var next = ShipToPlace();
+        var next = ShipToPlace()!;
         var tiles = next.ShipTiles(Tuple.Create(y, x), this);
         
         return
             tiles.Count() == next.Type.Length() &&
             tiles.All(t => IsRectPlaceable(t.Item1, t.Item2));
+    }
+
+    public void SetupForTurns()
+    {
+        for (int i = 0; i < BoardProperties.Height; i++)
+        {
+            for (int j = 0; j < BoardProperties.Width; j++)
+            {
+                SetDrawnRectAt(i, j, EBoardRect.Hidden);
+            }
+        }
+    }
+
+    public void HandleShipHit(int y, int x)
+    {
+        var ship = _ships.First(s => s.FinalShipTiles()!.Contains(Tuple.Create(y, x)))!;
+        if (ship.FinalShipTiles()!.All(t => DrawnRectAt(t.Item1, t.Item2) == EBoardRect.Hit))
+        {
+            ship.IsSunk = true;
+            var tiles = new List<Tuple<int, int>>();
+            foreach (var (ty, tx) in ship.FinalShipTiles()!)
+            {
+                tiles.Add(Tuple.Create<int, int>(ty - 1, tx - 1));
+                tiles.Add(Tuple.Create<int, int>(ty - 1, tx));
+                tiles.Add(Tuple.Create<int, int>(ty - 1, tx + 1));
+                tiles.Add(Tuple.Create<int, int>(ty, tx - 1));
+                tiles.Add(Tuple.Create<int, int>(ty, tx + 1));
+                tiles.Add(Tuple.Create<int, int>(ty + 1, tx - 1));
+                tiles.Add(Tuple.Create<int, int>(ty + 1, tx));
+                tiles.Add(Tuple.Create<int, int>(ty + 1, tx + 1));
+            }
+
+            var outsideTiles = 
+                tiles
+                    .Distinct()
+                    .Where(t => t.Item1 >= 0 && t.Item1 < BoardProperties.Height && t.Item2 >= 0 && t.Item2 < BoardProperties.Width)
+                    .Where(t => RectAt(t.Item1, t.Item2) == EBoardRect.Empty);
+            
+            foreach (var (ty, tx) in outsideTiles)
+            {
+                SetDrawnRectAt(ty, tx, EBoardRect.Empty);
+            }
+        }
+    }
+
+    public bool AllShipsSunk()
+    {
+        return _ships.All(s => s.IsSunk);
     }
 }
