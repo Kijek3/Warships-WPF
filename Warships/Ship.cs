@@ -8,6 +8,7 @@ public class Ship
     public EShipType Type { get; set; }
     public EShipOrientation Orientation { get; set; }
     public Tuple<int, int>? StartPosition { get; set; }
+    public bool IsSunk = false;
 
     public Ship(EShipType type)
     {
