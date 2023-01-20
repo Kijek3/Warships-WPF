@@ -57,53 +57,40 @@ namespace Warships
         {
             if (GameManager.GetInstance().GameState == EGameState.WelcomeScreen)
             {
-                OverlayText.Text = "Warships!\nPress left mouse button to begin the game!";
-                Player1.Visibility = Visibility.Hidden;
-                Player2.Visibility = Visibility.Hidden;
-                Overlay.Visibility = Visibility.Visible;
+                ShowOverlay("Warships!\nPress left mouse button to begin the game!");
             }
             else if (GameManager.GetInstance().GameState == EGameState.FirstPlayerPlacingNext)
             {
-                OverlayText.Text = "Player1 places ships";
-                Player1.Visibility = Visibility.Hidden;
-                Player2.Visibility = Visibility.Hidden;
-                Overlay.Visibility = Visibility.Visible;
+                ShowOverlay("Player1 places ships");
             } 
             else if (GameManager.GetInstance().GameState == EGameState.SecondPlayerPlacingNext)
             {
-                OverlayText.Text = "Player2 places ships";
-                Player1.Visibility = Visibility.Hidden;
-                Player2.Visibility = Visibility.Hidden;
-                Overlay.Visibility = Visibility.Visible;
+                ShowOverlay("Player2 places ships");
             } 
             else if (GameManager.GetInstance().GameState == EGameState.FirstPlayerTurnNext)
             {
-                OverlayText.Text = "Player1 turn";
-                Player1.Visibility = Visibility.Hidden;
-                Player2.Visibility = Visibility.Hidden;
-                Overlay.Visibility = Visibility.Visible;
+                ShowOverlay("Player1 turn");
             }
             else if (GameManager.GetInstance().GameState == EGameState.SecondPlayerTurnNext)
             {
-                OverlayText.Text = "Player2 turn";
-                Player1.Visibility = Visibility.Hidden;
-                Player2.Visibility = Visibility.Hidden;
-                Overlay.Visibility = Visibility.Visible;
+                ShowOverlay("Player2 turn");
             }
             else if (GameManager.GetInstance().GameState == EGameState.FirstPlayerWon)
             {
-                OverlayText.Text = "Player1 won the game!";
-                Player1.Visibility = Visibility.Hidden;
-                Player2.Visibility = Visibility.Hidden;
-                Overlay.Visibility = Visibility.Visible;
+                ShowOverlay("Player1 won the game!");
             }
             else if (GameManager.GetInstance().GameState == EGameState.SecondPlayerWon)
             {
-                OverlayText.Text = "Player2 won the game!";
-                Player1.Visibility = Visibility.Hidden;
-                Player2.Visibility = Visibility.Hidden;
-                Overlay.Visibility = Visibility.Visible;
+                ShowOverlay("Player2 won the game!");
             }
+        }
+
+        private void ShowOverlay(string text)
+        {
+            OverlayText.Text = text;
+            Player1.Visibility = Visibility.Hidden;
+            Player2.Visibility = Visibility.Hidden;
+            Overlay.Visibility = Visibility.Visible;
         }
         
         private void RedrawBoard(Board board)
