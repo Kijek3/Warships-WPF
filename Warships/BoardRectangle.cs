@@ -49,14 +49,14 @@ public class BoardRectangle
 
         if (GameManager.GetInstance().GameState is EGameState.FirstPlayerPlacingShips or EGameState.SecondPlayerPlacingShips)
         {
-            if (_board.IsNextShipPlacable(Y, X) == true)
+            if (_board.IsNextShipPlaceable(Y, X) == true)
             {
                 foreach (var (ty, tx) in _board.ShipToPlace()!.ShipTiles(Tuple.Create(Y, X), _board))
                 {
                     _board.SetDrawnRectAt(ty ,tx, EBoardRect.PlacementReady);
                 }
             }
-            else if (_board.IsNextShipPlacable(Y, X) == false)
+            else if (_board.IsNextShipPlaceable(Y, X) == false)
             {
                 foreach (var (ty, tx) in _board.ShipToPlace()!.ShipTiles(Tuple.Create(Y, X), _board))
                 {
@@ -116,7 +116,7 @@ public class BoardRectangle
 
         if (GameManager.GetInstance().GameState is EGameState.FirstPlayerPlacingShips or EGameState.SecondPlayerPlacingShips)
         {
-            if (_board.IsNextShipPlacable(Y, X) == true)
+            if (_board.IsNextShipPlaceable(Y, X) == true)
             {
                 foreach (var (ty, tx) in _board.ShipToPlace()!.ShipTiles(Tuple.Create(Y, X), _board))
                 {

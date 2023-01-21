@@ -13,6 +13,7 @@ public class Board
     private EBoardRect[,] _shipsBoard;
     private EBoardRect[,] _drawnBoard;
     private Ship[] _ships;
+    private int _shipToPlaceIndex = 0;
     
     public Board(int height, int width)
     {
@@ -82,8 +83,6 @@ public class Board
         RedrawBuffer.Clear();
     }
 
-    private int _shipToPlaceIndex = 0;
-
     public void PlaceNextShip(int y, int x)
     {
         _ships[_shipToPlaceIndex].StartPosition = Tuple.Create(y, x);
@@ -111,7 +110,7 @@ public class Board
         return _ships[_shipToPlaceIndex];
     }
 
-    public bool IsRectPlaceable(int y, int x)
+    private bool IsRectPlaceable(int y, int x)
     {
         return new[]
         {
@@ -130,7 +129,7 @@ public class Board
             .All(r => r == EBoardRect.Empty);
     }
 
-    public bool? IsNextShipPlacable(int y, int x)
+    public bool? IsNextShipPlaceable(int y, int x)
     {
         if (ShipToPlace() == null) return null;
         
