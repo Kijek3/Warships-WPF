@@ -7,7 +7,7 @@ namespace Warships;
 
 public class Board
 {
-    public BoardProperties BoardProperties;
+    public virtual BoardProperties BoardProperties { get; }
     public List<Tuple<int, int>> RedrawBuffer { get; set; }
     
     private EBoardRect[,] _shipsBoard;

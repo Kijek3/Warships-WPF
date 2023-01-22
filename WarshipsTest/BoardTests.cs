@@ -31,6 +31,7 @@ public class BoardTests
             Assert.That(_board.BoardProperties.Height, Is.EqualTo(_height));
             Assert.That(_board.BoardProperties.Width, Is.EqualTo(_width));
             Assert.That(_board.RedrawBuffer, Has.Count.EqualTo(_width * _height));
+            Assert.That(_board.AllShipsSunk, Is.EqualTo(false));
         });
     }
 
