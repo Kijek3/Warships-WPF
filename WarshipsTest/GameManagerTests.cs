@@ -37,6 +37,5 @@ public class GameManagerTests
         GameManager.GetInstance().GameStateChanged += OnGameStateChanged;
         GameManager.GetInstance().GameState = newState;
         Assert.That(_didInvoke, Is.True);
-        GameManager.GetInstance().GameStateChanged -= OnGameStateChanged;
     }
 }
